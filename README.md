@@ -67,7 +67,7 @@ $ git clone https://github.com/Omac092627/AsyncInn.git
 ---
 
 ### Visuals
-- [ERD (pdf)](/Assets/images/[ERD]AsyncInnERDExplained(1).pdf)
+- [ERD (pdf)](Assets/[ERD]AsyncInnERDExplained(1).pdf)
 
 
 ---
