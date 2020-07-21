@@ -34,11 +34,11 @@ Use `Install-Package Microsoft.EntityFrameworkCore.Tools` in the project manager
 ---
 
 ### Visuals
-- ![ERD](/Assets/AsyncInn2Flow.png) <sub>Code Fellows Class D11</sub>
+- ![ERD](/Assets/images/AsyncInn2Flow.png) <sub>Code Fellows Class D11</sub>
 
 
 
-![ERD2](/Assets/[ERD]AsyncInn.png)
+![ERD2](/Assets/images/[ERD]AsyncInn.png)
 
 ---
 
@@ -67,7 +67,7 @@ $ git clone https://github.com/Omac092627/AsyncInn.git
 ---
 
 ### Visuals
-- [ERD (pdf)](/Assets/[ERD]AsyncInnERDExplained(1).pdf)
+- [ERD (pdf)](Assets/images/ERD]AsyncInnERDExplained(1).pdf)
 
 
 ---
