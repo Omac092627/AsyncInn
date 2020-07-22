@@ -42,29 +42,6 @@ Use `Install-Package Microsoft.EntityFrameworkCore.Tools` in the project manager
 
 ---
 
-### Change Log
-- 1.1: Repo and README.md Built
-
-
-# Lab: 11 - Databases & ERDs
-
-*Author: Lami beach*
-
-----
-
-## Description
-This is our ERD diagram for the Async Inn database.
-
----
-
-### Getting Started
-Clone this repository to your local machine.
-
-```
-
-```
-
----
 
 ### Visuals
 - [ERD (pdf)](Assets/AsyncInnERDExplained(1).pdf)
