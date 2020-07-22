@@ -2,7 +2,7 @@
 
 Lab: 12 - Intro to EFCore & APIs
 
-*Author: Trevor Stubbs*
+*Author: Lami Beach*
 
 ----
 
@@ -15,7 +15,7 @@ This app is to showcase building and deploying a database for a WebApp.
 Clone this repository to your local machine.
 
 ```
-$ git clone https://github.com/TrevorStubbs/Async-Inn
+$ git clone https://github.com/Omac092627/AsyncInn.git
 ```
 
 ### To run the program from Visual Studio:
@@ -61,18 +61,19 @@ This is our ERD diagram for the Async Inn database.
 Clone this repository to your local machine.
 
 ```
-$ git clone https://github.com/Omac092627/AsyncInn.git
+
 ```
 
 ---
 
 ### Visuals
-- [ERD (pdf)](Assets/[ERD]AsyncInnERDExplained(1).pdf)
+- [ERD (pdf)](Assets/AsyncInnERDExplained(1).pdf)
 
 
 ---
 
 ### Change Log
+- 1.5: Added interfaces, sources(repositories), changed controller actions
 - 1.4: Controllers Created and tested
 - 1.3: DB seeded
 - 1.2: Model Classes and DbContext Created
