@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AsyncInn.Data;
+using AsyncInn.Models.Interfaces;
+using AsyncInn.Models.Services;
 
 namespace AsyncInn
 {
@@ -40,6 +42,12 @@ namespace AsyncInn
                 // connection string contains the location, username, pw of your sql server...with our sql database directly.
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+
+            //register my dependency injection services
+            services.AddTransient<IHotel, HotelRepository>();
+            services.AddTransient<IRoom, RoomRepository>();
+            services.AddTransient<IAmenity, AmenityRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
