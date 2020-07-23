@@ -4,14 +4,16 @@ using AsyncInn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AsyncInn.Migrations
 {
     [DbContext(typeof(AsyncInnDbContext))]
-    partial class AsyncInnDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200723212915_addedUpdatedDbset")]
+    partial class addedUpdatedDbset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,7 +63,7 @@ namespace AsyncInn.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("HotelRoomId")
+                    b.Property<int?>("HotelRoomHotelId")
                         .HasColumnType("int");
 
                     b.Property<int?>("HotelRoomRoomNumber")
@@ -81,7 +83,7 @@ namespace AsyncInn.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HotelRoomId", "HotelRoomRoomNumber");
+                    b.HasIndex("HotelRoomHotelId", "HotelRoomRoomNumber");
 
                     b.ToTable("Hotels");
 
@@ -117,7 +119,7 @@ namespace AsyncInn.Migrations
 
             modelBuilder.Entity("AsyncInn.Models.HotelRoom", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("HotelId")
                         .HasColumnType("int");
 
                     b.Property<int>("RoomNumber")
@@ -129,32 +131,11 @@ namespace AsyncInn.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id", "RoomNumber");
+                    b.HasKey("HotelId", "RoomNumber");
+
+                    b.HasIndex("RoomId");
 
                     b.ToTable("HotelRoom");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            RoomNumber = 1,
-                            Rate = 0m,
-                            RoomId = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            RoomNumber = 2,
-                            Rate = 0m,
-                            RoomId = 0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            RoomNumber = 3,
-                            Rate = 0m,
-                            RoomId = 0
-                        });
                 });
 
             modelBuilder.Entity("AsyncInn.Models.Room", b =>
@@ -164,12 +145,6 @@ namespace AsyncInn.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("HotelRoomId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("HotelRoomRoomNumber")
-                        .HasColumnType("int");
-
                     b.Property<int>("Layout")
                         .HasColumnType("int");
 
@@ -177,8 +152,6 @@ namespace AsyncInn.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HotelRoomId", "HotelRoomRoomNumber");
 
                     b.ToTable("Rooms");
 
@@ -221,37 +194,28 @@ namespace AsyncInn.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("AmenityForRoom");
-
-                    b.HasData(
-                        new
-                        {
-                            AmenitiesId = 1,
-                            RoomId = 1
-                        },
-                        new
-                        {
-                            AmenitiesId = 2,
-                            RoomId = 2
-                        },
-                        new
-                        {
-                            AmenitiesId = 3,
-                            RoomId = 3
-                        });
                 });
 
             modelBuilder.Entity("AsyncInn.Models.Hotel", b =>
                 {
                     b.HasOne("AsyncInn.Models.HotelRoom", null)
-                        .WithMany("Hotelroom")
-                        .HasForeignKey("HotelRoomId", "HotelRoomRoomNumber");
+                        .WithMany("Hotels")
+                        .HasForeignKey("HotelRoomHotelId", "HotelRoomRoomNumber");
                 });
 
-            modelBuilder.Entity("AsyncInn.Models.Room", b =>
+            modelBuilder.Entity("AsyncInn.Models.HotelRoom", b =>
                 {
-                    b.HasOne("AsyncInn.Models.HotelRoom", null)
-                        .WithMany("Room")
-                        .HasForeignKey("HotelRoomId", "HotelRoomRoomNumber");
+                    b.HasOne("AsyncInn.Models.Hotel", "Hotelroom")
+                        .WithMany()
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AsyncInn.Models.Room", "Roomnumber")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AsyncInn.Models.RoomAmenities", b =>

@@ -16,6 +16,8 @@ namespace AsyncInn.Models.Services
             _context = context;
         }
 
+
+
         public async Task<Amenity> Create(Amenity amenity)
         {
             //when I have a hotel I want to add a hotel

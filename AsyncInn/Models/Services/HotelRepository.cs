@@ -15,12 +15,25 @@ namespace AsyncInn.Models.Services
         {
             _context = context;
         }
+
+        public async Task AddHotelRoom(int hotelId, int roomNumber)
+        {
+            HotelRoom hotel = new HotelRoom()
+            {
+                Id = roomNumber,
+                RoomId = roomNumber,
+            };
+            _context.Entry(hotel).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+
+        }
+
         public async Task<Hotel> Create(Hotel hotel)
         {
             //when I have a hotel I want to add a hotel
             _context.Entry(hotel).State = Microsoft.EntityFrameworkCore.EntityState.Added;
             //the hotel gets 'saved' here, and then associated with an id.
-          await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return hotel;
         }
@@ -29,14 +42,18 @@ namespace AsyncInn.Models.Services
         {
             Hotel hotel = await GetHotel(id);
             _context.Entry(hotel).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
-           await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Hotel> GetHotel(int id)
         {
             //look in the db on the hotel table where the id is 
             //equal to the id that was brought in as an argument
-           Hotel hotel = await _context.Hotels.FindAsync(id);
+            Hotel hotel = await _context.Hotels.FindAsync(id);
+            var hotels = await _context.HotelRoom.Where(x => x.Id == id)
+                                                    .Include(x => x.Hotelroom)
+                                                    .ToListAsync();
+
             return hotel;
         }
 
@@ -46,7 +63,7 @@ namespace AsyncInn.Models.Services
             return hotel;
         }
 
-        public async Task<Hotel> Update( Hotel hotel)
+        public async Task<Hotel> Update(Hotel hotel)
         {
             _context.Entry(hotel).State = EntityState.Modified;
             await _context.SaveChangesAsync();

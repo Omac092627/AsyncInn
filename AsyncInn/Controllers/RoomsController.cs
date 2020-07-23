@@ -63,6 +63,25 @@ namespace AsyncInn.Controllers
             return CreatedAtAction("GetRoom", new { id = room.Id }, room);
         }
 
+
+        [HttpPost]
+        [Route("{amenitiesId}/{roomId}")]
+        //Post: api/amenitiesId/roomId
+        public async Task<ActionResult<Amenity>> AddAmenityToRoom(int amenitiesId, int roomId)
+        {
+            await _room.AddRoomAmenity(roomId, amenitiesId);
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("{amenitiesId}/{roomId}")]
+        public async Task<IActionResult> RemoveAmenityFromRoom(int amenitiesId, int roomId)
+        {
+            await _room.RemoveAmenityFromRoom(amenitiesId, roomId);
+            return Ok();
+        }
+
+
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Room>> DeleteRoom(int id)
