@@ -43,7 +43,7 @@ namespace AsyncInn.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHotelRoom(int id, HotelRoom hotelRoom)
         {
-            if (id != hotelRoom.HotelId)
+            if (id != hotelRoom.Id)
             {
                 return BadRequest();
             }
@@ -60,7 +60,7 @@ namespace AsyncInn.Controllers
         public async Task<ActionResult<HotelRoom>> PostHotelRoom(HotelRoom hotelRoom)
         {
             await _hotelRoom.Create(hotelRoom);
-            return CreatedAtAction("GetHotelRoom", new { id = hotelRoom.HotelId }, hotelRoom);
+            return CreatedAtAction("GetHotelRoom", new { id = hotelRoom.Id }, hotelRoom);
         }
 
         [HttpPost]
@@ -73,7 +73,7 @@ namespace AsyncInn.Controllers
         }
 
         [HttpPost]
-        [Route("{amenitiesId}/{roomId}")]
+        [Route("{hotelId}/HotelRoom/{roomNumber}")]
         public async Task<IActionResult> RemoveHotelRoom(int hotelId, int roomNumber)
         {
             await _hotelRoom.RemoveHotelRoom(hotelId, roomNumber);

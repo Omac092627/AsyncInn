@@ -43,7 +43,7 @@ namespace AsyncInn.Models.Services
 
             //include all of the amenities that the student has
             var hotelRoomNumber = await _context.HotelRoom.Where(x => x.RoomNumber == roomNumber)
-                                                                .Include(x => x.HotelId)
+                                                                .Include(x => x.Hotelroom)
                                                                 .ToListAsync();
             hotelRoom.RoomNumber = roomNumber;
             return hotelRoom;
@@ -67,7 +67,7 @@ namespace AsyncInn.Models.Services
         {
             HotelRoom hotelRoom = new HotelRoom()
             {
-                HotelId = hotelId,
+                Id = hotelId,
                 RoomNumber = roomNumber,
             };
             _context.Entry(hotelRoom).State = EntityState.Added;
@@ -85,7 +85,7 @@ namespace AsyncInn.Models.Services
         /// <returns></returns>
         public async Task RemoveHotelRoom(int hotelId, int roomNumber)
         {
-            var result = _context.HotelRoom.FirstOrDefault(x => x.HotelId == hotelId && x.RoomNumber == roomNumber);
+            var result = _context.HotelRoom.FirstOrDefault(x => x.Id == hotelId && x.RoomNumber == roomNumber);
             _context.Entry(result).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }

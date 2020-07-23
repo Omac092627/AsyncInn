@@ -20,7 +20,7 @@ namespace AsyncInn.Models.Services
         {
             HotelRoom hotel = new HotelRoom()
             {
-                HotelId = roomNumber,
+                Id = roomNumber,
                 RoomId = roomNumber,
             };
             _context.Entry(hotel).State = EntityState.Added;
@@ -50,7 +50,7 @@ namespace AsyncInn.Models.Services
             //look in the db on the hotel table where the id is 
             //equal to the id that was brought in as an argument
             Hotel hotel = await _context.Hotels.FindAsync(id);
-            var hotels = await _context.HotelRoom.Where(x => x.HotelId == id)
+            var hotels = await _context.HotelRoom.Where(x => x.Id == id)
                                                     .Include(x => x.Hotelroom)
                                                     .ToListAsync();
 
