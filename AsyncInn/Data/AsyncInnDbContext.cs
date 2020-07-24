@@ -86,28 +86,21 @@ namespace AsyncInn.Data
 
 
             modelBuilder.Entity<HotelRoom>().HasData(
+                new HotelRoom
+                {
+                    HotelId = 1,
+                    RoomNumber = 100,
+                    RoomId = 1,
+                    Rate = 10.00m,
+                    PetFriendly = true,
 
-                new HotelRoom
-                {
-                    Id = 1,
-                    RoomNumber = 1
-                },
-                new HotelRoom
-                {
-                    Id = 2,
-                    RoomNumber = 2
-                },
-                new HotelRoom
-                {
-                    Id = 3,
-                    RoomNumber = 3
                 }
 
                 ); ;
 
             //This tells the database that the enrollments table has a combo key of amenityid and room id
+            modelBuilder.Entity<HotelRoom>().HasKey(x => new { x.HotelId, x.RoomNumber });
             modelBuilder.Entity<RoomAmenities>().HasKey(x => new { x.AmenitiesId, x.RoomId });
-            modelBuilder.Entity<HotelRoom>().HasKey(x => new { x.Id, x.RoomNumber });
 
         }
 
@@ -115,8 +108,8 @@ namespace AsyncInn.Data
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Amenity> Amenities { get; set; }
 
-        public DbSet<RoomAmenities> AmenityForRoom { get; set; }
-        public DbSet<HotelRoom> HotelRoom { get; set; }
+        public DbSet<RoomAmenities> RoomAmenities { get; set; }
+        public DbSet<HotelRoom> HotelRooms { get; set; }
 
     }
 }

@@ -16,17 +16,6 @@ namespace AsyncInn.Models.Services
             _context = context;
         }
 
-        public async Task AddHotelRoom(int hotelId, int roomNumber)
-        {
-            HotelRoom hotel = new HotelRoom()
-            {
-                Id = roomNumber,
-                RoomId = roomNumber,
-            };
-            _context.Entry(hotel).State = EntityState.Added;
-            await _context.SaveChangesAsync();
-
-        }
 
         public async Task<Hotel> Create(Hotel hotel)
         {
@@ -50,8 +39,8 @@ namespace AsyncInn.Models.Services
             //look in the db on the hotel table where the id is 
             //equal to the id that was brought in as an argument
             Hotel hotel = await _context.Hotels.FindAsync(id);
-            var hotels = await _context.HotelRoom.Where(x => x.Id == id)
-                                                    .Include(x => x.Hotelroom)
+            var hotels = await _context.HotelRooms.Where(x => x.Id == id)
+                                                    .Include(x => x.Hotel)
                                                     .ToListAsync();
 
             return hotel;
