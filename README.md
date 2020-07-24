@@ -50,6 +50,7 @@ Use `Install-Package Microsoft.EntityFrameworkCore.Tools` in the project manager
 ---
 
 ### Change Log
+- 1.6: Added proper routing
 - 1.5: Added interfaces, sources(repositories), changed controller actions
 - 1.4: Controllers Created and tested
 - 1.3: DB seeded
