@@ -12,12 +12,12 @@ namespace AsyncInn.Models.Services
     public class HotelRoomRepository : IHotelRoom
     {
 
+        private AsyncInnDbContext _context;
         public HotelRoomRepository(AsyncInnDbContext context)
         {
             _context = context;
         }
 
-        private AsyncInnDbContext _context;
 
 
         public async Task<HotelRoom> Create(HotelRoom hotelRoom)
@@ -35,24 +35,35 @@ namespace AsyncInn.Models.Services
             _context.Entry(room).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
+
+
+
+
+
+
         public async Task<HotelRoom> GetHotelRoom(int hotelId, int roomNumber)
         {
             //look in the db on the room table where the id is 
             //equal to the id that was brought in as an argument
-            HotelRoom hotelRoom = await _context.HotelRoom.FindAsync(hotelId);
+            HotelRoom hotelRoom = await _context.HotelRooms.FindAsync(hotelId, roomNumber);
 
             //include all of the amenities that the student has
-            var hotelRoomNumber = await _context.HotelRoom.Where(x => x.RoomNumber == roomNumber)
-                                                                .Include(x => x.Hotelroom)
+            var room = await _context.Rooms.Where(x => x.Id == hotelRoom.RoomId)
+                                                                .Include(x => x.RoomAmenities)
+                                                                .ThenInclude(x => x.Amenity)
                                                                 .ToListAsync();
             hotelRoom.RoomNumber = roomNumber;
             return hotelRoom;
         }
 
-        public async Task<List<HotelRoom>> GetHotelRooms()
+        public async Task<List<HotelRoom>> GetHotelRooms(int hotelId)
         {
-            var room = await _context.HotelRoom.ToListAsync();
-            return room;
+            var hotelRooms = await _context.HotelRooms.Where(x => x.HotelId == hotelId)
+                                                                    .Include(x => x.Room)
+                                                                    .ThenInclude(x => x.RoomAmenities)
+                                                                    .ThenInclude(x => x.Amenity)
+                                                                    .ToListAsync();
+            return hotelRooms;
         }
 
 
@@ -67,7 +78,7 @@ namespace AsyncInn.Models.Services
         {
             HotelRoom hotelRoom = new HotelRoom()
             {
-                Id = hotelId,
+                HotelId = hotelId,
                 RoomNumber = roomNumber,
             };
             _context.Entry(hotelRoom).State = EntityState.Added;
@@ -85,7 +96,7 @@ namespace AsyncInn.Models.Services
         /// <returns></returns>
         public async Task RemoveHotelRoom(int hotelId, int roomNumber)
         {
-            var result = _context.HotelRoom.FirstOrDefault(x => x.Id == hotelId && x.RoomNumber == roomNumber);
+            var result = _context.HotelRooms.FirstOrDefault(x => x.HotelId == hotelId && x.RoomNumber == roomNumber);
             _context.Entry(result).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }

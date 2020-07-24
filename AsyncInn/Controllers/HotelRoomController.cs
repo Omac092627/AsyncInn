@@ -24,9 +24,9 @@ namespace AsyncInn.Controllers
 
         // GET: api/HotelRoom
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRoom()
+        public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRooms(int hotelId)
         {
-            return await _hotelRoom.GetHotelRooms();
+            return await _hotelRoom.GetHotelRooms(hotelId);
         }
 
         // GET: api/HotelRoom/5
@@ -43,7 +43,7 @@ namespace AsyncInn.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHotelRoom(int id, HotelRoom hotelRoom)
         {
-            if (id != hotelRoom.Id)
+            if (id != hotelRoom.HotelId)
             {
                 return BadRequest();
             }
@@ -60,24 +60,7 @@ namespace AsyncInn.Controllers
         public async Task<ActionResult<HotelRoom>> PostHotelRoom(HotelRoom hotelRoom)
         {
             await _hotelRoom.Create(hotelRoom);
-            return CreatedAtAction("GetHotelRoom", new { id = hotelRoom.Id }, hotelRoom);
-        }
-
-        [HttpPost]
-        [Route("{hotelId}/HotelRoom/{roomNumber}")]
-        //Post: api/amenitiesId/roomId
-        public async Task<ActionResult<HotelRoom>> AddHotelRoom(int hotelId, int roomNumber)
-        {
-            await _hotelRoom.AddHotelRoom(hotelId, roomNumber);
-            return Ok();
-        }
-
-        [HttpPost]
-        [Route("{hotelId}/HotelRoom/{roomNumber}")]
-        public async Task<IActionResult> RemoveHotelRoom(int hotelId, int roomNumber)
-        {
-            await _hotelRoom.RemoveHotelRoom(hotelId, roomNumber);
-            return Ok();
+            return CreatedAtAction("GetHotelRoom", new { id = hotelRoom.HotelId }, hotelRoom);
         }
 
 
@@ -88,6 +71,31 @@ namespace AsyncInn.Controllers
         {
             await _hotelRoom.Delete(hotelId, roomNumber);
             return NoContent();
+        }
+
+
+
+        [HttpPut("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
+        public async Task<IActionResult> PutHotelRoom(int hotelId, int roomNumber, HotelRoom hotelRoom)
+        {
+            if (hotelId != hotelRoom.HotelId || roomNumber != hotelRoom.RoomNumber)
+            {
+                return BadRequest();
+            }
+
+            var updatedHotelRoom = await _hotelRoom.UpdateHotelRoom(hotelRoom);
+
+            return Ok(updatedHotelRoom);
+        }
+
+
+
+        [HttpPost("/api/Hotels/{hotelId}/Rooms")]
+        public async Task<ActionResult<HotelRoom>> PostHotelRoom(int hotelId, HotelRoom hotelRoom)
+        {
+            await _hotelRoom.Create(hotelRoom);
+
+            return CreatedAtAction("GetHotelRoom", new { id = hotelRoom.HotelId }, hotelRoom);
         }
     }
 }

@@ -41,10 +41,10 @@ namespace AsyncInn.Models.Services
             Room room = await _context.Rooms.FindAsync(id);
 
             //include all of the amenities that the student has
-            var amenities = await _context.AmenityForRoom.Where(x => x.AmenitiesId == id)
+            var amenities = await _context.RoomAmenities.Where(x => x.AmenitiesId == id)
                                                                 .Include(x => x.Amenity)
                                                                 .ToListAsync();
-            room.Amenities = amenities;
+            room.RoomAmenities = amenities;
             return room;
         }
 
@@ -86,7 +86,7 @@ namespace AsyncInn.Models.Services
         /// <returns></returns>
         public async Task RemoveAmenityFromRoom(int amenityId, int roomId)
         {
-            var result = _context.AmenityForRoom.FirstOrDefault(x => x.AmenitiesId == amenityId && x.RoomId == roomId);
+            var result = _context.RoomAmenities.FirstOrDefault(x => x.AmenitiesId == amenityId && x.RoomId == roomId);
             _context.Entry(result).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }

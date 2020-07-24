@@ -12,7 +12,7 @@ namespace AsyncInn.Models
         public string Name { get; set; }
         public Layout Layout { get; set; }
 
-        public List<RoomAmenities> Amenities { get; set; }
+        public List<RoomAmenities> RoomAmenities { get; set; }
         public List<HotelRoom> HotelRooms { get; set; }
 
 
