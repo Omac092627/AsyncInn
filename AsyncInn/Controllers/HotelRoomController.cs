@@ -23,7 +23,7 @@ namespace AsyncInn.Controllers
         }
 
         // GET: api/HotelRoom
-        [HttpGet]
+        [HttpGet, Route("(hotelId)")]
         public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRooms(int hotelId)
         {
             return await _hotelRoom.GetHotelRooms(hotelId);
@@ -41,9 +41,9 @@ namespace AsyncInn.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHotelRoom(int id, HotelRoom hotelRoom)
+        public async Task<IActionResult> PutHotelRoom(int hotelId, int roomNumber, HotelRoom hotelRoom)
         {
-            if (id != hotelRoom.HotelId)
+            if (hotelId != hotelRoom.HotelId || roomNumber != hotelRoom.RoomNumber)
             {
                 return BadRequest();
             }
@@ -51,16 +51,6 @@ namespace AsyncInn.Controllers
             var updateHotelRoom = await _hotelRoom.UpdateHotelRoom(hotelRoom);
             return Ok(updateHotelRoom);
 
-        }
-
-        // POST: api/HotelRoom
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<HotelRoom>> PostHotelRoom(HotelRoom hotelRoom)
-        {
-            await _hotelRoom.Create(hotelRoom);
-            return CreatedAtAction("GetHotelRoom", new { id = hotelRoom.HotelId }, hotelRoom);
         }
 
 
@@ -75,18 +65,6 @@ namespace AsyncInn.Controllers
 
 
 
-        [HttpPut("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
-        public async Task<IActionResult> PutHotelRoom(int hotelId, int roomNumber, HotelRoom hotelRoom)
-        {
-            if (hotelId != hotelRoom.HotelId || roomNumber != hotelRoom.RoomNumber)
-            {
-                return BadRequest();
-            }
-
-            var updatedHotelRoom = await _hotelRoom.UpdateHotelRoom(hotelRoom);
-
-            return Ok(updatedHotelRoom);
-        }
 
 
 

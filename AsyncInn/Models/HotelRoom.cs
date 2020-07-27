@@ -8,7 +8,6 @@ namespace AsyncInn.Models
     public class HotelRoom
     {
 
-        public int Id { get;  set; }
         public int HotelId { get; set; }
         public int RoomNumber { get; set; }
         public int RoomId { get; set; }
