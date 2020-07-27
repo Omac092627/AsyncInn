@@ -26,7 +26,8 @@ namespace AsyncInn.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
         {
-            return await _hotel.GetHotels();
+            List<Hotel> hotels = await _hotel.GetHotels();
+            return hotels;
 
         }
 

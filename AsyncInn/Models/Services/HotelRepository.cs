@@ -41,6 +41,7 @@ namespace AsyncInn.Models.Services
             Hotel hotel = await _context.Hotels.FindAsync(id);
             var hotelRooms = await _context.HotelRooms.Where(x => x.HotelId == id)
                                                       .Include(x => x.Room)
+                                              
                                                       .ThenInclude(x => x.RoomAmenities)
                                                       .ThenInclude(x => x.Amenity)
                                                       .ToListAsync();
