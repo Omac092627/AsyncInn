@@ -39,19 +39,20 @@ namespace AsyncInn.Models.Services
             //look in the db on the room table where the id is 
             //equal to the id that was brought in as an argument
             Room room = await _context.Rooms.FindAsync(id);
-
-            //include all of the amenities that the student has
-            var amenities = await _context.RoomAmenities.Where(x => x.AmenitiesId == id)
-                                                                .Include(x => x.Amenity)
-                                                                .ToListAsync();
+            var amenities = await _context.RoomAmenities.Where(x => x.RoomId == id)
+                                                        .Include(x => x.Amenity)
+                                                        .ToListAsync();
             room.RoomAmenities = amenities;
             return room;
         }
 
         public async Task<List<Room>> GetRooms()
         {
-            var room = await _context.Rooms.ToListAsync();
-            return room;
+            var rooms = await _context.Rooms.Include(x => x.RoomAmenities)
+                                             .ThenInclude(x => x.Amenity)
+                                             .ToListAsync();
+
+            return rooms;
         }
 
 

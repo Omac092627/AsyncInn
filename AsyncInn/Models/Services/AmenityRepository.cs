@@ -38,6 +38,12 @@ namespace AsyncInn.Models.Services
         public async Task<Amenity> GetAmenity(int id)
         {
             Amenity amenity = await _context.Amenities.FindAsync(id);
+            var roomAmenities = await _context.RoomAmenities.Where(x => x.AmenitiesId == id)
+                                                            .Include(x => x.Room)
+                                                            .ThenInclude(x => x.HotelRooms)
+                                                            .ThenInclude(x => x.Hotel)
+                                                            .ToListAsync();
+            amenity.Amenities = roomAmenities;
             return amenity;
         }
 
