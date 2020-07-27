@@ -52,7 +52,6 @@ namespace AsyncInn.Models.Services
                                                                 .Include(x => x.RoomAmenities)
                                                                 .ThenInclude(x => x.Amenity)
                                                                 .ToListAsync();
-            hotelRoom.RoomNumber = roomNumber;
             return hotelRoom;
         }
 
