@@ -13,6 +13,7 @@ namespace AsyncInn.Models.Interfaces
         Task<Amenity> Create(Amenity amenity);
         //Read a Hotel
         //Get a hotel
+
         Task<List<Amenity>> GetAmenitys();
         //Get by Hotel id
         Task<Amenity> GetAmenity(int id);
