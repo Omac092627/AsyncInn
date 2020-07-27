@@ -16,6 +16,11 @@ namespace AsyncInn.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //This tells the database that the enrollments table has a combo key of amenityid and room id
+            modelBuilder.Entity<HotelRoom>().HasKey(x => new { x.HotelId, x.RoomNumber });
+            modelBuilder.Entity<RoomAmenities>().HasKey(x => new { x.AmenitiesId, x.RoomId });
+
+
             modelBuilder.Entity<Hotel>().HasData(
                 new Hotel
                 {
@@ -98,9 +103,6 @@ namespace AsyncInn.Data
 
                 ); ;
 
-            //This tells the database that the enrollments table has a combo key of amenityid and room id
-            modelBuilder.Entity<HotelRoom>().HasKey(x => new { x.HotelId, x.RoomNumber });
-            modelBuilder.Entity<RoomAmenities>().HasKey(x => new { x.AmenitiesId, x.RoomId });
 
         }
 
@@ -110,6 +112,7 @@ namespace AsyncInn.Data
 
         public DbSet<RoomAmenities> RoomAmenities { get; set; }
         public DbSet<HotelRoom> HotelRooms { get; set; }
+
 
     }
 }

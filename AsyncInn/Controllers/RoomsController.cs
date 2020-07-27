@@ -26,7 +26,8 @@ namespace AsyncInn.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
-            return await _room.GetRooms();
+            List<Room> rooms = await _room.GetRooms();
+            return rooms;
         }
 
         // GET: api/Rooms/5
@@ -65,7 +66,7 @@ namespace AsyncInn.Controllers
 
 
         [HttpPost]
-        [Route("{amenitiesId}/{roomId}")]
+        [Route("{roomId}/{amenitiesId}")]
         //Post: api/amenitiesId/roomId
         public async Task<ActionResult<Amenity>> AddAmenityToRoom(int amenitiesId, int roomId)
         {
@@ -74,7 +75,7 @@ namespace AsyncInn.Controllers
         }
 
         [HttpPost]
-        [Route("{amenitiesId}/{roomId}")]
+        [Route("{roomId}/{amenitiesId}")]
         public async Task<IActionResult> RemoveAmenityFromRoom(int amenitiesId, int roomId)
         {
             await _room.RemoveAmenityFromRoom(amenitiesId, roomId);

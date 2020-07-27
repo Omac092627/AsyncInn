@@ -40,30 +40,28 @@ namespace AsyncInn.Models.Services
 
 
 
+        public async Task<List<HotelRoom>> GetHotelRooms(int hotelId)
+        {
+            List<HotelRoom> hotelRooms = await _context.HotelRooms.Where(x => x.HotelId == hotelId)
+                                                                .Include(x => x.Room)
+                                                                .ToListAsync();
+            return hotelRooms;
+        }
 
         public async Task<HotelRoom> GetHotelRoom(int hotelId, int roomNumber)
         {
             //look in the db on the room table where the id is 
             //equal to the id that was brought in as an argument
-            HotelRoom hotelRoom = await _context.HotelRooms.FindAsync(hotelId, roomNumber);
+            var room = await _context.HotelRooms.Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber)
+                                                           .Include(x => x.Hotel)
+                                                           .Include(x => x.Room)
+                                                           .ThenInclude(x => x.RoomAmenities)
+                                                           .ThenInclude(x => x.Amenity)
+                                                           .FirstOrDefaultAsync();
 
-            //include all of the amenities that the student has
-            var room = await _context.Rooms.Where(x => x.Id == hotelRoom.RoomId)
-                                                                .Include(x => x.RoomAmenities)
-                                                                .ThenInclude(x => x.Amenity)
-                                                                .ToListAsync();
-            return hotelRoom;
+            return room;
         }
 
-        public async Task<List<HotelRoom>> GetHotelRooms(int hotelId)
-        {
-            var hotelRooms = await _context.HotelRooms.Where(x => x.HotelId == hotelId)
-                                                                    .Include(x => x.Room)
-                                                                    .ThenInclude(x => x.RoomAmenities)
-                                                                    .ThenInclude(x => x.Amenity)
-                                                                    .ToListAsync();
-            return hotelRooms;
-        }
 
 
         public async Task<HotelRoom> UpdateHotelRoom(HotelRoom hotel)

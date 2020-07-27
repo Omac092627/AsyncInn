@@ -21,26 +21,28 @@ namespace AsyncInn.Controllers
         {
             _hotelRoom = hotelRoom;
         }
-
-        // GET: api/HotelRooms
-        [HttpGet, Route("/api/Hotels/{hotelId}/Rooms")]
+        // GET: /api/Hotels/{hotelId}/Rooms
+        // GET: api/HotelRoom/5
+        [HttpGet("{hotelId}/Rooms/{roomNumber}")]
         public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRooms(int hotelId)
         {
+
             return await _hotelRoom.GetHotelRooms(hotelId);
+            
         }
 
-        // GET: api/HotelRoom/5
-        [HttpGet("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
+        // GET: api/HotelRooms
+        [HttpGet("{hotelId}/Rooms")]
         public async Task<ActionResult<HotelRoom>> GetHotelRoom(int hotelId, int roomNumber)
         {
-            var hotelRoom = await _hotelRoom.GetHotelRoom(hotelId, roomNumber);
-            return hotelRoom;
+            return await _hotelRoom.GetHotelRoom(hotelId, roomNumber);
         }
+
 
         // PUT: api/HotelRoom/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
+        [HttpPut("{hotelId}/Rooms/{roomNumber}")]
         public async Task<IActionResult> PutHotelRoom(int hotelId, int roomNumber, HotelRoom hotelRoom)
         {
             if (hotelId != hotelRoom.HotelId || roomNumber != hotelRoom.RoomNumber)
@@ -68,7 +70,7 @@ namespace AsyncInn.Controllers
 
 
 
-        [HttpPost("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
+        [HttpPost("{hotelId}/Rooms")]
         public async Task<ActionResult<HotelRoom>> PostHotelRoom(int hotelId, HotelRoom hotelRoom)
         {
             await _hotelRoom.Create(hotelRoom, hotelId);

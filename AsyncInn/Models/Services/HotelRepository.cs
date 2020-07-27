@@ -39,27 +39,27 @@ namespace AsyncInn.Models.Services
             //look in the db on the hotel table where the id is 
             //equal to the id that was brought in as an argument
             Hotel hotel = await _context.Hotels.FindAsync(id);
-            var hotelRooms = await _context.HotelRooms.Where(x => x.HotelId == id)
-                                                      .Include(x => x.Room)
-                                              
+            var hotelRooms = await _context.Hotels.Where(x => x.Id == id)
+                                                      .Include(x => x.HotelRooms)
+                                                      .ThenInclude(x => x.Room)
                                                       .ThenInclude(x => x.RoomAmenities)
                                                       .ThenInclude(x => x.Amenity)
                                                       .ToListAsync();
 
             return hotel;
+
         }
 
         public async Task<List<Hotel>> GetHotels()
         {
-            var hotel = await _context.Hotels.ToListAsync();
-            return hotel;
+            var hotels = await _context.Hotels.ToListAsync();
+            return hotels;
         }
 
-        public async Task<Hotel> Update(Hotel hotel)
+        public async Task Update(Hotel hotel)
         {
             _context.Entry(hotel).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return hotel;
 
         }
     }
