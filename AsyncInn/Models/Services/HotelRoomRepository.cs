@@ -20,7 +20,7 @@ namespace AsyncInn.Models.Services
 
 
 
-        public async Task<HotelRoom> Create(HotelRoom hotelRoom)
+        public async Task<HotelRoom> Create(HotelRoom hotelRoom, int hotelId)
         {
             //when I have a hotel I want to add a hotel
             _context.Entry(hotelRoom).State = Microsoft.EntityFrameworkCore.EntityState.Added;

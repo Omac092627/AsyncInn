@@ -71,7 +71,7 @@ namespace AsyncInn.Controllers
         [HttpPost("/api/Hotels/{hotelId}/Rooms")]
         public async Task<ActionResult<HotelRoom>> PostHotelRoom(int hotelId, HotelRoom hotelRoom)
         {
-            await _hotelRoom.Create(hotelRoom);
+            await _hotelRoom.Create(hotelRoom, hotelId);
 
             return CreatedAtAction("GetHotelRoom", new { id = hotelRoom.HotelId }, hotelRoom);
         }
