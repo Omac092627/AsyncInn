@@ -26,7 +26,8 @@ namespace AsyncInn.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities()
         {
-            return await _amenity.GetAmenitys();
+            List<Amenity> amenities = await _amenity.GetAmenities();
+            return amenities;
         }
 
         // GET: api/Amenities/5

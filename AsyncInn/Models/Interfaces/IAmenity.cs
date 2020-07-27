@@ -14,7 +14,7 @@ namespace AsyncInn.Models.Interfaces
         //Read a Hotel
         //Get a hotel
 
-        Task<List<Amenity>> GetAmenitys();
+        Task<List<Amenity>> GetAmenities();
         //Get by Hotel id
         Task<Amenity> GetAmenity(int id);
         //Update a Hotel

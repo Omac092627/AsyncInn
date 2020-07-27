@@ -45,13 +45,19 @@ namespace AsyncInn.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHotel(int id, Hotel hotel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (id != hotel.Id)
             {
                 return BadRequest();
             }
 
-            var updateHotel= await _hotel.Update(hotel);
-            return Ok(updateHotel);
+            await _hotel.Update(hotel);
+
+            return NoContent();
         }
 
         // POST: api/Hotels
