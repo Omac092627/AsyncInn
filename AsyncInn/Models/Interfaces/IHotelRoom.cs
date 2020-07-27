@@ -7,7 +7,7 @@ namespace AsyncInn.Models.Interfaces
 {
     public interface IHotelRoom
     {
-        Task<HotelRoom> Create(HotelRoom hotelRoom);
+        Task<HotelRoom> Create(HotelRoom hotelRoom, int hotelId);
         //Read a Hotel
         //Get a hotel
         //Get by Hotel id
