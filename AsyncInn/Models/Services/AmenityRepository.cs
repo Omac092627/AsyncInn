@@ -44,36 +44,32 @@ namespace AsyncInn.Models.Services
 
         public async Task<AmenityDTO> GetAmenity(int id)
         {
-            Amenity amenity = await _context.Amenities.FindAsync(id);
-            var roomAmenities = await _context.RoomAmenities.Where(x => x.AmenitiesId == id)
-                                                            .Include(x => x.Room)
-                                                            .ThenInclude(x => x.HotelRoom)
-                                                            .ThenInclude(x => x.Hotel)
-                                                            .ToListAsync();
-
-            AmenityDTO dto = new AmenityDTO()
             {
-                Id = amenity.Id,
-                Name = amenity.Name,
-            };
+                // our DB does NOT hold DTOs. It holds enitites.
+                Amenity amenity = await _context.Amenities.FindAsync(id);
 
+                AmenityDTO dto = new AmenityDTO()
+                {
+                    Id = amenity.Id,
+                    Name = amenity.Name
+                };
 
-            amenity.Amenities = roomAmenities;
-            return dto;
+                return dto;
+            }
         }
 
         public async Task<List<AmenityDTO>> GetAmenities()
         {
-            List<Amenity> amenities = await _context.Amenities.ToListAsync();
+            var list = await _context.Amenities.ToListAsync();
 
-            List<AmenityDTO> dtos = new List<AmenityDTO>();
+            var amenities = new List<AmenityDTO>();
 
-            foreach (var item in amenities)
+            foreach (var item in list)
             {
-                dtos.Add(new AmenityDTO() { Id = item.Id, Name = item.Name });
+                amenities.Add(await GetAmenity(item.Id));
             }
 
-            return dtos;
+            return amenities;
         }
 
         public async Task<Amenity> Update(Amenity amenity)

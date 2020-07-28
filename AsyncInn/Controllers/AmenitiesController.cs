@@ -26,9 +26,16 @@ namespace AsyncInn.Controllers
 
         // GET: api/Amenities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AmenityDTO>>> GetAmenities()
+        public async Task<ActionResult<AmenityDTO>> GetAmenities(int id)
         {
-            return await _amenity.GetAmenities();
+            var amenities = await _amenity.GetAmenity(id);
+
+            if (amenities == null)
+            {
+                return NotFound();
+            }
+
+            return amenities;
         }
 
         // GET: api/Amenities/5
