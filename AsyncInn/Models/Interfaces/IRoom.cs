@@ -11,12 +11,12 @@ namespace AsyncInn.Models.Interfaces
         //methods and properties that are required for the classes to implement
 
         //Create a Hotel
-        Task<Room> Create(Room room);
+        Task<RoomDTO> Create(RoomDTO room);
         //Read a Hotel
         //Get a hotel
         Task<List<Room>> GetRooms();
         //Get by Hotel id
-        Task<Room> GetRoom(int id);
+        Task<RoomDTO> GetRoom(int id);
         //Update a Hotel
         Task<Room> Update(Room room);
         //Delete a Hotel

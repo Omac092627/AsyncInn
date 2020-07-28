@@ -6,15 +6,11 @@ using System.Threading.Tasks;
 
 namespace AsyncInn.Models
 {
-    public class Amenity
+    public class RoomDTO
     {
-
         public int Id { get; set; }
         public string Name { get; set; }
-
-        public List<RoomAmenities> Amenities { get; set; }
-
-
-
+        public Layout Layout { get; set; }
+        public List<AmenityDTO> Amenities { get; set; }
     }
 }
