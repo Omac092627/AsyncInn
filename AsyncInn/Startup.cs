@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using AsyncInn.Data;
 using AsyncInn.Models.Interfaces;
 using AsyncInn.Models.Services;
+using AsyncInn.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace AsyncInn
 {
@@ -47,6 +49,9 @@ namespace AsyncInn
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AsyncInnDbContext>()
+                .AddDefaultTokenProviders();
 
             //register my dependency injection services
             services.AddTransient<IHotel, HotelRepository>();
