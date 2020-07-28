@@ -13,5 +13,6 @@ namespace AsyncInn.Models
         public int RoomId { get; set; }
         public Amenity Amenity { get; set; }
         public Room Room { get; set; }
+
     }
 }

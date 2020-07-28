@@ -1,4 +1,5 @@
 ﻿using AsyncInn.Data;
+using AsyncInn.Models.DTOs;
 using AsyncInn.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,25 +14,38 @@ namespace AsyncInn.Models.Services
     {
 
         private AsyncInnDbContext _context;
-        public HotelRoomRepository(AsyncInnDbContext context)
+        private IRoom _room;
+        public HotelRoomRepository(AsyncInnDbContext context, IRoom room)
         {
             _context = context;
+            _room = room;
         }
 
 
 
-        public async Task<HotelRoom> Create(HotelRoom hotelRoom, int hotelId)
+        public async Task<HotelRoom> Create(HotelRoomDTO hotelRoom, int hotelId)
         {
+
+            HotelRoom enitity = new HotelRoom()
+            {
+                HotelId = hotelId,
+                RoomNumber = hotelRoom.RoomNumber,
+                Rate = hotelRoom.Rate,
+                PetFriendly = hotelRoom.PetFriendly,
+                RoomId = hotelRoom.RoomId,
+
+
+            };
             //when I have a hotel I want to add a hotel
             _context.Entry(hotelRoom).State = Microsoft.EntityFrameworkCore.EntityState.Added;
             //the hotel gets 'saved' here, and then associated with an id.
             await _context.SaveChangesAsync();
-            return hotelRoom;
+            return enitity;
         }
 
         public async Task Delete(int hotelId, int roomNumber)
         {
-            HotelRoom room = await GetHotelRoom(hotelId, roomNumber);
+            HotelRoomDTO room = await GetHotelRoom(hotelId, roomNumber);
             _context.Entry(room).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
@@ -48,18 +62,37 @@ namespace AsyncInn.Models.Services
             return hotelRooms;
         }
 
-        public async Task<HotelRoom> GetHotelRoom(int hotelId, int roomNumber)
+        public async Task<HotelRoomDTO> GetHotelRoom(int hotelId, int roomNumber)
         {
             //look in the db on the room table where the id is 
             //equal to the id that was brought in as an argument
-            var room = await _context.HotelRooms.Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber)
+            var hotelRoom = await _context.HotelRooms.Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber)
                                                            .Include(x => x.Hotel)
                                                            .Include(x => x.Room)
                                                            .ThenInclude(x => x.RoomAmenities)
                                                            .ThenInclude(x => x.Amenity)
-                                                           .FirstOrDefaultAsync();
+                                                           .Include(x => x.Rate)
+                                                           .Include(x => x.PetFriendly)
+                                                           .Include(x => x.RoomId)
+                                                            .FirstOrDefaultAsync();
 
-            return room;
+            List<RoomDTO> list = new List<RoomDTO>();
+            foreach (var item in list)
+            {
+                list.Add(new RoomDTO { Id = item.Id, Name = item.Name });
+            }
+
+
+            HotelRoomDTO dto = new HotelRoomDTO()
+            {
+                HotelId = hotelId,
+                RoomNumber = roomNumber,
+                Rate = hotelRoom.Rate,
+                PetFriendly = hotelRoom.PetFriendly,
+                RoomId = hotelRoom.RoomId,
+            };
+
+            return dto;
         }
 
 
