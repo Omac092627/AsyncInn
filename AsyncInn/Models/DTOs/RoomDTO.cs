@@ -10,7 +10,7 @@ namespace AsyncInn.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Layout Layout { get; set; }
+        public string Layout { get; set; }
         public List<AmenityDTO> Amenities { get; set; }
     }
 }

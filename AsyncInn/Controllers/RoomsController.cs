@@ -24,10 +24,10 @@ namespace AsyncInn.Controllers
 
         // GET: api/Rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+        public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
-            List<Room> rooms = await _room.GetRooms();
-            return rooms;
+            return await _room.GetRooms();
+
         }
 
         // GET: api/Rooms/5
@@ -35,7 +35,13 @@ namespace AsyncInn.Controllers
         public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
 
-            RoomDTO room = await _room.GetRoom(id);
+            var room = await _room.GetRoom(id);
+
+            if (room == null)
+            {
+                return NotFound();
+            }
+
             return room;
         }
 
