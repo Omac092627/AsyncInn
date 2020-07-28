@@ -23,12 +23,17 @@ namespace AsyncInn.Models.Services
             _amenity = amenity;
         }
 
-        public async Task<Room> Create(Room room)
+        public async Task<RoomDTO> Create(RoomDTO room)
         {
+            Room roomDB = new Room()
+            {
+                Name = room.Name,
+                Layout = (Layout)Convert.ToInt32(room.Layout)
+            };
 
 
             //when I have a hotel I want to add a hotel
-            _context.Entry(room).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+            _context.Entry(roomDB).State = Microsoft.EntityFrameworkCore.EntityState.Added;
             //the hotel gets 'saved' here, and then associated with an id.
             await _context.SaveChangesAsync();
 
@@ -76,6 +81,8 @@ namespace AsyncInn.Models.Services
                                              .ToListAsync();
 
             return rooms;
+
+
         }
 
 

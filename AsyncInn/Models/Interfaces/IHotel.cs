@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AsyncInn.Models.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,12 @@ namespace AsyncInn.Models.Interfaces
         //methods and properties that are required for the classes to implement
 
         //Create a Hotel
-        Task<Hotel> Create(Hotel hotel);
+        Task<Hotel> Create(HotelDTO hotel);
         //Read a Hotel
         //Get a hotel
         Task<List<Hotel>> GetHotels();
         //Get by Hotel id
-        Task<Hotel> GetHotel(int id);
+        Task<HotelDTO> GetHotel(int id);
         //Update a Hotel
         Task Update(Hotel hotel);
         //Delete a Hotel

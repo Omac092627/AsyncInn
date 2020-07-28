@@ -5,36 +5,51 @@ using AsyncInn.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AsyncInn.Models.DTOs;
 
 namespace AsyncInn.Models.Services
 {
     public class HotelRepository : IHotel
     {
         private AsyncInnDbContext _context;
-        public HotelRepository(AsyncInnDbContext context)
+        private IHotelRoom _hotelRoom;
+        public HotelRepository(AsyncInnDbContext context, IHotelRoom hotelRoom)
         {
             _context = context;
+            _hotelRoom = hotelRoom;
         }
 
 
-        public async Task<Hotel> Create(Hotel hotel)
+        public async Task<Hotel> Create(HotelDTO hotel)
         {
+
+            Hotel enitity = new Hotel()
+            {
+                Id = hotel.Id,
+                Name = hotel.Name,
+                StreetAddress = hotel.StreetAddress,
+                City = hotel.City,
+                State = hotel.State,
+                Phone = hotel.Phone,
+
+
+            };
             //when I have a hotel I want to add a hotel
             _context.Entry(hotel).State = Microsoft.EntityFrameworkCore.EntityState.Added;
             //the hotel gets 'saved' here, and then associated with an id.
             await _context.SaveChangesAsync();
 
-            return hotel;
+            return enitity;
         }
 
         public async Task Delete(int id)
         {
-            Hotel hotel = await GetHotel(id);
+            HotelDTO hotel = await GetHotel(id);
             _context.Entry(hotel).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Hotel> GetHotel(int id)
+        public async Task<HotelDTO> GetHotel(int id)
         {
             //look in the db on the hotel table where the id is 
             //equal to the id that was brought in as an argument
@@ -46,8 +61,24 @@ namespace AsyncInn.Models.Services
                                                       .ThenInclude(x => x.Amenity)
                                                       .ToListAsync();
 
-            return hotel;
+            List<HotelRoomDTO> hotelRoom = new List<HotelRoomDTO>();
+            foreach (var item in hotelRoom)
+            {
+                hotelRoom.Add(new HotelRoomDTO { HotelId = item.HotelId, RoomNumber = item.RoomNumber });
+            }
 
+            HotelDTO dto = new HotelDTO()
+            {
+                Id = hotel.Id,
+                Name = hotel.Name,
+                StreetAddress = hotel.StreetAddress,
+                City = hotel.City,
+                State = hotel.State,
+                Phone = hotel.Phone,
+                HotelRooms = hotelRoom,
+            };
+
+            return dto;
         }
 
         public async Task<List<Hotel>> GetHotels()

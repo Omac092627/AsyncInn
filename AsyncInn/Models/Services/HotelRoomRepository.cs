@@ -71,15 +71,12 @@ namespace AsyncInn.Models.Services
                                                            .Include(x => x.Room)
                                                            .ThenInclude(x => x.RoomAmenities)
                                                            .ThenInclude(x => x.Amenity)
-                                                           .Include(x => x.Rate)
-                                                           .Include(x => x.PetFriendly)
-                                                           .Include(x => x.RoomId)
                                                             .FirstOrDefaultAsync();
 
-            List<RoomDTO> list = new List<RoomDTO>();
-            foreach (var item in list)
+            List<RoomDTO> room = new List<RoomDTO>();
+            foreach (var item in room)
             {
-                list.Add(new RoomDTO { Id = item.Id, Name = item.Name });
+                room.Add(new RoomDTO { Id = item.Id, Name = item.Name, Layout = item.Layout });
             }
 
 
@@ -90,6 +87,7 @@ namespace AsyncInn.Models.Services
                 Rate = hotelRoom.Rate,
                 PetFriendly = hotelRoom.PetFriendly,
                 RoomId = hotelRoom.RoomId,
+                Room = room,
             };
 
             return dto;

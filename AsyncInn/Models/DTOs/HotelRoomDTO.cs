@@ -13,6 +13,6 @@ namespace AsyncInn.Models.DTOs
         public decimal Rate { get; set; }
         public bool PetFriendly { get; set; }
         public int RoomId { get; set; }
-        public RoomDTO Room { get; set; }
+        public List<RoomDTO> Room { get; set; }
     }
 }
