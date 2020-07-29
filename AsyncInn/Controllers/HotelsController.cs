@@ -9,10 +9,12 @@ using AsyncInn.Data;
 using AsyncInn.Models;
 using AsyncInn.Models.Interfaces;
 using AsyncInn.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncInn.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class HotelsController : ControllerBase
     {
@@ -25,6 +27,7 @@ namespace AsyncInn.Controllers
 
         // GET: api/Hotels
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
         {
             List<Hotel> hotels = await _hotel.GetHotels();
@@ -34,6 +37,8 @@ namespace AsyncInn.Controllers
 
         // GET: api/Hotels/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
+
         public async Task<ActionResult<HotelDTO>> GetHotel(int id)
         {
             HotelDTO hotel = await _hotel.GetHotel(id);

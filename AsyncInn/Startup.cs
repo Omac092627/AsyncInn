@@ -14,6 +14,9 @@ using AsyncInn.Models.Interfaces;
 using AsyncInn.Models.Services;
 using AsyncInn.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace AsyncInn
 {
@@ -53,6 +56,36 @@ namespace AsyncInn
                 .AddEntityFrameworkStores<AsyncInnDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["JWTIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey
+                        (Encoding.UTF8.GetBytes(Configuration["JWTKey"]))
+                    };
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("District Manager Only", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
+                options.AddPolicy("Property Manager Only", policy => policy.RequireRole(ApplicationRoles.PropertyManager));
+                options.AddPolicy("Agent Only", policy => policy.RequireRole(ApplicationRoles.Agent));
+
+
+            });
+
+
             //register my dependency injection services
             services.AddTransient<IHotel, HotelRepository>();
             services.AddTransient<IRoom, RoomRepository>();
@@ -61,7 +94,7 @@ namespace AsyncInn
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -70,6 +103,9 @@ namespace AsyncInn
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+            RoleInitializer.SeedData(serviceProvider);
             app.UseEndpoints(endpoints =>
             {
                 // Set our default routing for our request within the API application
