@@ -9,11 +9,13 @@ using AsyncInn.Data;
 using AsyncInn.Models;
 using AsyncInn.Models.Interfaces;
 using AsyncInn.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncInn.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class HotelsController : ControllerBase
     {
         private readonly IHotel _hotel;
@@ -25,6 +27,7 @@ namespace AsyncInn.Controllers
 
         // GET: api/Hotels
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
         {
             List<Hotel> hotels = await _hotel.GetHotels();
@@ -44,6 +47,7 @@ namespace AsyncInn.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Policy = "District Manager")]
         public async Task<IActionResult> PutHotel(int id, Hotel hotel)
         {
             if (!ModelState.IsValid)
@@ -65,6 +69,7 @@ namespace AsyncInn.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(Policy = "District Manager")]
         public async Task<ActionResult<Hotel>> PostHotel(HotelDTO hotel)
         {
             await _hotel.Create(hotel);
@@ -73,6 +78,7 @@ namespace AsyncInn.Controllers
 
         // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "District Manager")]
         public async Task<ActionResult<Hotel>> DeleteHotel(int id)
         {
             await _hotel.Delete(id);

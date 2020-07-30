@@ -14,6 +14,10 @@ using AsyncInn.Models.Interfaces;
 using AsyncInn.Models.Services;
 using AsyncInn.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace AsyncInn
 {
@@ -32,14 +36,27 @@ namespace AsyncInn
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // this is where all of our dependencies are going to live. 
+            // Enable the use of using controllers within the MVC convention
+            // Install - Package Microsoft.AspNetCore.Mvc.NewtonsoftJson - Version 3.1.2
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
             // this is where all of our dependencies are going to live. 
             // Enable the use of using controllers within the MVC convention
-            services.AddControllers();
+            services.AddControllers(options => {
 
+
+                //Make all routes by default authorized to require login
+                options.Filters.Add(new AuthorizeFilter());
+            })
+
+                .AddNewtonsoftJson(options =>
+                
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                
+                );
             // Register with the app, that the database exists, and what options to use for it. 
             services.AddDbContext<AsyncInnDbContext>(options =>
             {
@@ -53,6 +70,36 @@ namespace AsyncInn
                 .AddEntityFrameworkStores<AsyncInnDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["JWTIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey
+                        (Encoding.UTF8.GetBytes(Configuration["JWTKey"]))
+                    };
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("DistrictRoute", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
+                options.AddPolicy("PropertyRoute", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager));
+                options.AddPolicy("AgentRoute", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager, ApplicationRoles.Agent));
+
+
+            });
+
+
             //register my dependency injection services
             services.AddTransient<IHotel, HotelRepository>();
             services.AddTransient<IRoom, RoomRepository>();
@@ -61,7 +108,7 @@ namespace AsyncInn
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -70,6 +117,10 @@ namespace AsyncInn
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            RoleInitializer.SeedData(serviceProvider, userManager, Configuration);
             app.UseEndpoints(endpoints =>
             {
                 // Set our default routing for our request within the API application
