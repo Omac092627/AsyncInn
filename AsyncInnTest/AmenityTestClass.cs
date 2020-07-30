@@ -21,8 +21,8 @@ namespace AsyncInnTest
         {
             var amenity = new AmenityDTO
             {
-                Id = 5,
-                Name = "thingy",
+                Id = 1,
+                Name = "pool",
 
             };
             var repository = BuildRepository();

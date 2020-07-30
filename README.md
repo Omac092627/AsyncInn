@@ -50,6 +50,10 @@ Use `Install-Package Microsoft.EntityFrameworkCore.Tools` in the project manager
 ---
 
 ### Change Log
+- 2.0: Added UnitTesting/SeedAdminData/Roles
+- 1.9: Added Authorization
+- 1.8: Added RoleInitializers
+- 1.7: Added DTOs
 - 1.6: Added proper routing
 - 1.5: Added interfaces, sources(repositories), changed controller actions
 - 1.4: Controllers Created and tested
