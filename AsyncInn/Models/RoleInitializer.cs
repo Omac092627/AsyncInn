@@ -1,6 +1,7 @@
 ﻿using AsyncInn.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -29,12 +30,13 @@ namespace AsyncInn.Models
 
 
 
-        public static void SeedData(IServiceProvider serviceProvider)
+        public static void SeedData(IServiceProvider serviceProvider, UserManager<ApplicationUser> userManager, IConfiguration _config)
         {
             using (var dbContext = new AsyncInnDbContext(serviceProvider.GetRequiredService<DbContextOptions<AsyncInnDbContext>>()))
             {
                 dbContext.Database.EnsureCreated();
                 AddRoles(dbContext);
+                SeedUsers(userManager, _config);
             }
         }
 
@@ -49,6 +51,22 @@ namespace AsyncInn.Models
             }
         }
 
+        public static void SeedUsers(UserManager<ApplicationUser> userManager, IConfiguration _config)
+        {
+            if (userManager.FindByEmailAsync(_config["AdminUser"]).Result == null )
+            {
+                ApplicationUser user = new ApplicationUser();
+                user.UserName = _config["AdminUser"];
+                user.Email = user.UserName;
+                user.FirstName = user.FirstName;
+                user.LastName = user.LastName;
+                IdentityResult result = userManager.CreateAsync(user, _config["Password"]).Result;
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, ApplicationRoles.DistrictManager);
+                }
+            }
+        }
 
 
 

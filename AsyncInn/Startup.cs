@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace AsyncInn
 {
@@ -35,14 +36,27 @@ namespace AsyncInn
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // this is where all of our dependencies are going to live. 
+            // Enable the use of using controllers within the MVC convention
+            // Install - Package Microsoft.AspNetCore.Mvc.NewtonsoftJson - Version 3.1.2
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
             // this is where all of our dependencies are going to live. 
             // Enable the use of using controllers within the MVC convention
-            services.AddControllers();
+            services.AddControllers(options => {
 
+
+                //Make all routes by default authorized to require login
+                options.Filters.Add(new AuthorizeFilter());
+            })
+
+                .AddNewtonsoftJson(options =>
+                
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                
+                );
             // Register with the app, that the database exists, and what options to use for it. 
             services.AddDbContext<AsyncInnDbContext>(options =>
             {
@@ -67,7 +81,7 @@ namespace AsyncInn
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["JWTIssuer"],
@@ -78,9 +92,9 @@ namespace AsyncInn
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("District Manager Only", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
-                options.AddPolicy("Property Manager Only", policy => policy.RequireRole(ApplicationRoles.PropertyManager));
-                options.AddPolicy("Agent Only", policy => policy.RequireRole(ApplicationRoles.Agent));
+                options.AddPolicy("DistrictRoute", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
+                options.AddPolicy("PropertyRoute", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager));
+                options.AddPolicy("AgentRoute", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager, ApplicationRoles.Agent));
 
 
             });
@@ -105,7 +119,8 @@ namespace AsyncInn
 
             app.UseAuthentication();
             app.UseAuthorization();
-            RoleInitializer.SeedData(serviceProvider);
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            RoleInitializer.SeedData(serviceProvider, userManager, Configuration);
             app.UseEndpoints(endpoints =>
             {
                 // Set our default routing for our request within the API application

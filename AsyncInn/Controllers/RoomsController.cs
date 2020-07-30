@@ -8,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using AsyncInn.Data;
 using AsyncInn.Models;
 using AsyncInn.Models.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncInn.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RoomsController : ControllerBase
     {
         private readonly IRoom _room;
@@ -24,6 +26,7 @@ namespace AsyncInn.Controllers
 
         // GET: api/Rooms
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
             return await _room.GetRooms();
@@ -49,6 +52,7 @@ namespace AsyncInn.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Policy = "District Manager")]
         public async Task<IActionResult> PutRoom(int id, Room room)
         {
             if (id != room.Id)
@@ -64,15 +68,15 @@ namespace AsyncInn.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(Policy = "District Manager")]
         public async Task<ActionResult<Room>> PostRoom(RoomDTO room)
         {
             await _room.Create(room);
             return CreatedAtAction("GetRoom", new { id = room.Id }, room);
         }
 
-
-        [HttpPost]
-        [Route("{roomId}/{amenitiesId}")]
+        [HttpPost, Route("{roomId}/{amenitiesId}")]
+        [Authorize(Policy = "District Manager")]
         //Post: api/amenitiesId/roomId
         public async Task<ActionResult<Amenity>> AddAmenityToRoom(int amenitiesId, int roomId)
         {
@@ -80,8 +84,8 @@ namespace AsyncInn.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        [Route("{roomId}/{amenitiesId}")]
+        [HttpPost, Route("{roomId}/{amenitiesId}")]
+        [Authorize(Policy = "District Manager")]
         public async Task<IActionResult> RemoveAmenityFromRoom(int amenitiesId, int roomId)
         {
             await _room.RemoveAmenityFromRoom(amenitiesId, roomId);
@@ -91,6 +95,7 @@ namespace AsyncInn.Controllers
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "District Manager")]
         public async Task<ActionResult<Room>> DeleteRoom(int id)
         {
             await _room.Delete(id);
