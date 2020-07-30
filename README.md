@@ -8,7 +8,10 @@ Lab: 12 - Intro to EFCore & APIs
 
 ## Description
 This app is to showcase building and deploying a database for a WebApp.
-
+The application is a mock Hotel chain that contains databases of the Hotels: locations, addresses, phone numbers, city, state, and so on.
+The application also contains specifics for Hotel Rooms: rooms, amenities, nick names, and whether they're pet friendly or not.
+The goal was to build a database of tables and create an API that can do CRUD/REST operations and return the above information to the user.
+The application also includes Authorization using JWT Newtonsoft. The only authorized head user is the District Manager. Followed by Property Manager. Followed by Agent.
 ---
 
 ### Getting Started
